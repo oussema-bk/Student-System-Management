@@ -1,262 +1,64 @@
-/* You can add global styles to this file, and also import other style files */
-@use '@angular/material' as mat;
-@use '@angular/material/theming' as *;
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '@angular/material/theming';
 
-// Custom theme
-$primary: mat.define-palette(mat.$indigo-palette);
-$accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-$warn: mat.define-palette(mat.$red-palette);
-$theme: mat.define-light-theme((
+@include mat-core();
+
+// Define custom theme
+$primary: mat-palette($mat-indigo);
+$accent: mat-palette($mat-pink, A200, A100, A400);
+$warn: mat-palette($mat-red);
+
+$theme: mat-light-theme((
   color: (
     primary: $primary,
     accent: $accent,
     warn: $warn,
-  ),
-  typography: mat.define-typography-config(
-    $font-family: '"Roboto", "Helvetica Neue", sans-serif',
-    $headline: mat.define-typography-level(32px, 48px, 700),
-    $body-1: mat.define-typography-level(16px, 24px, 500)
-  ),
-  density: 0,
+  )
 ));
 
-// Apply theme
-@include mat.all-component-themes($theme);
+@include angular-material-theme($theme);
 
 // Global styles
 html, body { 
   height: 100%; 
-  margin: 0;
+  margin: 0; 
   padding: 0;
-  font-family: 'Roboto', sans-serif;
-  line-height: 1.5;
-  color: #333;
-  background-color: #f5f5f5;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-// Responsive container
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
+* {
   box-sizing: border-box;
 }
 
-// Utility classes
-.full-width {
-  width: 100%;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-.text-center {
-  text-align: center;
+// Custom utility classes
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+.p-1 { padding: 0.5rem; }
+.p-2 { padding: 1rem; }
+.p-3 { padding: 1.5rem; }
+.p-4 { padding: 2rem; }
+
+// Error snackbar styling
+.error-snackbar {
 }
 
-.mt-1 { margin-top: 8px; }
-.mt-2 { margin-top: 16px; }
-.mt-3 { margin-top: 24px; }
-.mb-1 { margin-bottom: 8px; }
-.mb-2 { margin-bottom: 16px; }
-.mb-3 { margin-bottom: 24px; }
-
-// Custom scrollbar
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-// Responsive breakpoints
-@mixin mobile {
-  @media (max-width: 599px) { @content; }
-}
-
-@mixin tablet {
-  @media (min-width: 600px) and (max-width: 959px) { @content; }
-}
-
-@mixin desktop {
-  @media (min-width: 960px) { @content; }
-}
-
-// Custom material overrides
-.mat-card {
-  border-radius: 8px !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
-  margin-bottom: 16px;
-}
-
-.mat-form-field {
-  width: 100%;
-  margin-bottom: 8px;
-}
-
-.mat-button, .mat-raised-button, .mat-stroked-button {
-  border-radius: 20px !important;
-  text-transform: uppercase;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  padding: 0 16px;
-  min-width: 100px;
-  
-  &.mat-primary {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  }
-}
-
-// Loading spinner
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  min-height: 200px;
-}
-
-// Error message
-.error-message {
-  color: #d32f2f;
-  font-size: 14px;
-  margin: 8px 0;
-  padding: 8px;
-  background-color: #ffebee;
-  border-radius: 4px;
-  border-left: 4px solid #d32f2f;
-}
-
-// Success message
-.success-message {
-  color: #2e7d32;
-  font-size: 14px;
-  margin: 8px 0;
-  padding: 8px;
-  background-color: #e8f5e9;
-  border-radius: 4px;
-  border-left: 4px solid #2e7d32;
-}
-
-// Responsive table
-.responsive-table {
-  width: 100%;
-  overflow-x: auto;
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    
-    th, td {
-      padding: 12px 16px;
-      text-align: left;
-      border-bottom: 1px solid #e0e0e0;
-    }
-    
-    th {
-      font-weight: 600;
-      color: rgba(0, 0, 0, 0.87);
-      background-color: #f5f5f5;
-    }
-    
-    tr:hover {
-      background-color: #f5f5f5;
-    }
-  }
-  
-  @include mobile {
-    display: block;
-    
-    table, thead, tbody, th, td, tr {
-      display: block;
-    }
-    
-    thead tr {
-      position: absolute;
-      top: -9999px;
-      left: -9999px;
-    }
-    
-    tr {
-      margin-bottom: 16px;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
-    }
-    
-    td {
-      border: none;
-      border-bottom: 1px solid #e0e0e0;
-      position: relative;
-      padding-left: 50%;
-      white-space: normal;
-      text-align: left;
-      
-      &:before {
-        position: absolute;
-        left: 12px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        text-align: left;
-        font-weight: bold;
-        content: attr(data-title);
-      }
-    }
-  }
-}
-
-// Flex utilities
-.flex-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  
-  &.space-between {
-    justify-content: space-between;
-  }
-  
-  &.center {
-    align-items: center;
-  }
-}
-
-// Card hover effect
-.card-hover {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
-  }
-}
-
-// Default the application to a light color theme
-:root {
-  color-scheme: light;
-  
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables with fallbacks
-  --mat-sys-surface: #f5f5f5;
-  --mat-sys-on-surface: #333;
-  --mat-sys-body-medium: 400 14px/20px 'Roboto', "Helvetica Neue", sans-serif;
-}
-
-// Apply system fonts and reset
-html, body { 
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font: var(--mat-sys-body-medium);
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+// Success snackbar styling
+.success-snackbar {
 }

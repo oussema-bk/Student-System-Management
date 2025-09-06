@@ -1,0 +1,53 @@
+<app-navigation>
+  <div class="-dashboard">
+    <div class="dashboard-header">
+      <div class="header-content">
+        <div class="user-info">
+          <mat-icon class="user-icon">person</mat-icon>
+          <div class="user-details">
+            <h1>{{ currentUser?.first_name }} {{ currentUser?.last_name }}</h1>
+            <p class="role-badge"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Chargement des données...</p>
+    </div>
+
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">dashboard</mat-icon>
+              <div class="stat-info">
+                <h3>Dashboard</h3>
+                <p></p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-tab-group class="dashboard-tabs">
+        <mat-tab label="Accueil">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Tableau de Bord </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>dashboard</mat-icon>
+                  <p>Bienvenue dans votre tableau de bord</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</app-navigation>

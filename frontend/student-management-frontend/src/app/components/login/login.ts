@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,7 +8,29 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../services/api.service';
+import { isPlatformBrowser } from '@angular/common';
+
+// Interfaces for API responses
+interface LoginResponse {
+  access: string;
+  refresh: string;
+  user: User;
+}
+
+interface User {
+  id: number;
+  email: string;
+  role: 'student' | 'teacher' | 'parent' | 'manager' | 'administrator';
+  first_name?: string;
+  last_name?: string;
+}
+
+interface ApiError {
+  detail?: string;
+  non_field_errors?: string[];
+  [key: string]: any;
+}
 
 @Component({
   selector: 'app-login',
@@ -32,9 +54,10 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
+    private apiService: ApiService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -43,10 +66,12 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Check if already authenticated
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      this.router.navigate(['/dashboard']);
+    // Check if already authenticated (only in browser)
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('access_token');
+      if (token) {
+        this.router.navigate(['/dashboard']);
+      }
     }
   }
 
@@ -55,12 +80,16 @@ export class LoginComponent implements OnInit {
       this.isLoading = true;
       const credentials = this.loginForm.value;
 
-      this.http.post('http://localhost:8000/api/auth/login/', credentials).subscribe({
+      this.apiService.login(credentials).subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          localStorage.setItem('access_token', response.access);
-          localStorage.setItem('refresh_token', response.refresh);
-          localStorage.setItem('current_user', JSON.stringify(response.user));
+          
+          // Store tokens and user data (only in browser)
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('access_token', response.access);
+            localStorage.setItem('refresh_token', response.refresh);
+            localStorage.setItem('current_user', JSON.stringify(response.user));
+          }
           
           this.snackBar.open('Connexion réussie!', 'Fermer', {
             duration: 3000,
@@ -68,9 +97,10 @@ export class LoginComponent implements OnInit {
             verticalPosition: 'top'
           });
           
-          this.router.navigate(['/dashboard']);
+          // Redirect to appropriate dashboard based on role
+          this.redirectBasedOnRole(response.user.role);
         },
-        error: (error) => {
+        error: (error: any) => {
           this.isLoading = false;
           let errorMessage = 'Erreur de connexion';
           
@@ -78,6 +108,8 @@ export class LoginComponent implements OnInit {
             errorMessage = error.error.detail;
           } else if (error.error?.non_field_errors) {
             errorMessage = error.error.non_field_errors[0];
+          } else if (error.status === 0) {
+            errorMessage = 'Impossible de se connecter au serveur. Vérifiez votre connexion.';
           }
           
           this.snackBar.open(errorMessage, 'Fermer', {
@@ -90,6 +122,28 @@ export class LoginComponent implements OnInit {
       });
     } else {
       this.markFormGroupTouched();
+    }
+  }
+
+  private redirectBasedOnRole(role: string): void {
+    switch (role) {
+      case 'student':
+        this.router.navigate(['/student-dashboard']);
+        break;
+      case 'teacher':
+        this.router.navigate(['/teacher-dashboard']);
+        break;
+      case 'parent':
+        this.router.navigate(['/parent-dashboard']);
+        break;
+      case 'manager':
+        this.router.navigate(['/manager-dashboard']);
+        break;
+      case 'administrator':
+        this.router.navigate(['/admin-dashboard']);
+        break;
+      default:
+        this.router.navigate(['/dashboard']);
     }
   }
 
