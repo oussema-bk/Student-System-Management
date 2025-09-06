@@ -1,0 +1,186 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="welcome-section">
+      <h1>{{ dashboardData.title }}</h1>
+      <p class="welcome-text">
+        Bonjour {{ currentUser?.first_name }} {{ currentUser?.last_name }} 
+        <span class="role-badge">{{ getRoleDisplayName(currentUser?.role || '') }}</span>
+      </p>
+    </div>
+    <div class="header-actions">
+      <button mat-icon-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>person</mat-icon>
+          <span>Profil</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>settings</mat-icon>
+          <span>Paramètres</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Déconnexion</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des données...</p>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!isLoading" class="dashboard-content">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <mat-card *ngFor="let card of dashboardData.cards" class="stat-card" [ngClass]="'card-' + card.color">
+        <mat-card-content>
+          <div class="card-content">
+            <div class="card-icon">
+              <mat-icon [ngClass]="'icon-' + card.color">{{ card.icon }}</mat-icon>
+            </div>
+            <div class="card-info">
+              <h3 class="card-value">{{ card.value }}</h3>
+              <p class="card-title">{{ card.title }}</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Role-specific Content -->
+    <div class="dashboard-sections">
+      <!-- Administrator Section -->
+      <div *ngIf="currentUser?.role === 'administrator'" class="admin-section">
+        <mat-card class="section-card">
+          <mat-card-header>
+            <mat-card-title>Gestion des Utilisateurs</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="action-buttons">
+              <button mat-raised-button color="primary" routerLink="/admin/users">
+                <mat-icon>group</mat-icon>
+                Gérer les Utilisateurs
+              </button>
+              <button mat-raised-button color="accent" routerLink="/admin/students">
+                <mat-icon>school</mat-icon>
+                Gérer les Étudiants
+              </button>
+              <button mat-raised-button color="warn" routerLink="/admin/teachers">
+                <mat-icon>person</mat-icon>
+                Gérer les Enseignants
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Manager Section -->
+      <div *ngIf="currentUser?.role === 'manager'" class="manager-section">
+        <mat-card class="section-card">
+          <mat-card-header>
+            <mat-card-title>Gestion Financière</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="action-buttons">
+              <button mat-raised-button color="primary" routerLink="/manager/invoices">
+                <mat-icon>receipt</mat-icon>
+                Factures
+              </button>
+              <button mat-raised-button color="accent" routerLink="/manager/payments">
+                <mat-icon>payment</mat-icon>
+                Paiements
+              </button>
+              <button mat-raised-button color="warn" routerLink="/manager/reports">
+                <mat-icon>assessment</mat-icon>
+                Rapports
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Teacher Section -->
+      <div *ngIf="currentUser?.role === 'teacher'" class="teacher-section">
+        <mat-card class="section-card">
+          <mat-card-header>
+            <mat-card-title>Mes Classes</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="action-buttons">
+              <button mat-raised-button color="primary" routerLink="/teacher/classes">
+                <mat-icon>class</mat-icon>
+                Mes Classes
+              </button>
+              <button mat-raised-button color="accent" routerLink="/teacher/grades">
+                <mat-icon>grade</mat-icon>
+                Saisir les Notes
+              </button>
+              <button mat-raised-button color="warn" routerLink="/teacher/attendance">
+                <mat-icon>event_available</mat-icon>
+                Présences
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Parent Section -->
+      <div *ngIf="currentUser?.role === 'parent'" class="parent-section">
+        <mat-card class="section-card">
+          <mat-card-header>
+            <mat-card-title>Mes Enfants</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="action-buttons">
+              <button mat-raised-button color="primary" routerLink="/parent/children">
+                <mat-icon>child_care</mat-icon>
+                Mes Enfants
+              </button>
+              <button mat-raised-button color="accent" routerLink="/parent/grades">
+                <mat-icon>grade</mat-icon>
+                Notes et Bulletins
+              </button>
+              <button mat-raised-button color="warn" routerLink="/parent/payments">
+                <mat-icon>payment</mat-icon>
+                Paiements
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Student Section -->
+      <div *ngIf="currentUser?.role === 'student'" class="student-section">
+        <mat-card class="section-card">
+          <mat-card-header>
+            <mat-card-title>Mon Parcours</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="action-buttons">
+              <button mat-raised-button color="primary" routerLink="/student/grades">
+                <mat-icon>grade</mat-icon>
+                Mes Notes
+              </button>
+              <button mat-raised-button color="accent" routerLink="/student/attendance">
+                <mat-icon>event_available</mat-icon>
+                Mes Présences
+              </button>
+              <button mat-raised-button color="warn" routerLink="/student/documents">
+                <mat-icon>description</mat-icon>
+                Mes Documents
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
