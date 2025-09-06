@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Student {
@@ -16,194 +16,173 @@ export interface Student {
   is_archived: boolean;
 }
 
+export interface Teacher {
+  id: number;
+  user: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+  teacher_id: string;
+  specialization: string;
+  hire_date: string;
+}
+
+export interface Parent {
+  id: number;
+  user: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+  phone: string;
+  address: string;
+}
+
+export interface Subject {
+  id: number;
+  name: string;
+  coefficient: number;
+}
+
+export interface ExamType {
+  id: number;
+  name: string;
+  percentage: number;
+}
+
 export interface Grade {
   id: number;
-  student: number;
-  subject: {
-    id: number;
-    name: string;
-    coefficient: number;
-  };
-  exam_type: {
-    id: number;
-    name: string;
-    percentage: number;
-  };
-  trimester: {
-    id: number;
-    name: string;
-  };
+  student: Student;
+  subject: Subject;
+  exam_type: ExamType;
   grade: number;
-  max_grade: number;
-  teacher_notes: string;
-  created_at: string;
-}
-
-export interface Attendance {
-  id: number;
-  student: number;
-  class_obj: {
-    id: number;
-    name: string;
-  };
-  date: string;
-  status: 'present' | 'absent' | 'late' | 'excused';
-  teacher: {
-    id: number;
-    user: {
-      first_name: string;
-      last_name: string;
-    };
-  };
-  notes: string;
-}
-
-export interface Bulletin {
-  id: number;
-  student: {
-    id: number;
-    user: {
-      first_name: string;
-      last_name: string;
-    };
-    student_id: string;
-  };
-  academic_year: string;
   trimester: string;
-  class_name: string;
-  total_average: number;
-  class_rank: number;
-  level_rank: number;
-  attendance_rate: number;
-  teacher_notes: string;
-  principal_notes: string;
+  created_at: string;
 }
 
 export interface Invoice {
   id: number;
   invoice_number: string;
-  invoice_type: 'tuition' | 'salary' | 'expense' | 'other';
-  student?: number;
+  student: Student;
   amount: number;
-  description: string;
   due_date: string;
-  status: 'pending' | 'paid' | 'overdue' | 'cancelled';
+  status: string;
   created_at: string;
 }
 
 export interface Payment {
   id: number;
-  invoice: number;
+  invoice: Invoice;
   amount: number;
-  payment_method: 'cash' | 'bank_transfer' | 'cheque' | 'card';
+  payment_method: string;
   payment_date: string;
-  reference_number: string;
-  status: 'pending' | 'completed' | 'failed' | 'refunded';
+  status: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private readonly API_URL = 'http://localhost:8000/api';
+  private baseUrl = 'http://172.18.0.5:8000/api';
 
   constructor(private http: HttpClient) {}
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('access_token');
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Host': 'localhost',
+      'Authorization': token ? `Bearer ${token}` : ''
+    });
+  }
+
+  // Authentication
+  login(credentials: {email: string, password: string}): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Host': 'localhost'
+    });
+    return this.http.post(`${this.baseUrl}/auth/login/`, credentials, { headers });
+  }
+
   // Students
-  getStudents(params?: any): Observable<{ results: Student[]; count: number }> {
-    return this.http.get<{ results: Student[]; count: number }>(`${this.API_URL}/accounts/students/`, { params });
+  getStudents(): Observable<Student[]> {
+    return this.http.get<Student[]>(`${this.baseUrl}/accounts/students/`, { headers: this.getHeaders() });
   }
 
   getStudent(id: number): Observable<Student> {
-    return this.http.get<Student>(`${this.API_URL}/accounts/students/${id}/`);
+    return this.http.get<Student>(`${this.baseUrl}/accounts/students/${id}/`, { headers: this.getHeaders() });
+  }
+
+  // Teachers
+  getTeachers(): Observable<Teacher[]> {
+    return this.http.get<Teacher[]>(`${this.baseUrl}/accounts/teachers/`, { headers: this.getHeaders() });
+  }
+
+  getTeacher(id: number): Observable<Teacher> {
+    return this.http.get<Teacher>(`${this.baseUrl}/accounts/teachers/${id}/`, { headers: this.getHeaders() });
+  }
+
+  // Parents
+  getParents(): Observable<Parent[]> {
+    return this.http.get<Parent[]>(`${this.baseUrl}/accounts/parents/`, { headers: this.getHeaders() });
+  }
+
+  getParent(id: number): Observable<Parent> {
+    return this.http.get<Parent>(`${this.baseUrl}/accounts/parents/${id}/`, { headers: this.getHeaders() });
   }
 
   // Grades
-  getGrades(params?: any): Observable<{ results: Grade[]; count: number }> {
-    return this.http.get<{ results: Grade[]; count: number }>(`${this.API_URL}/academics/grades/`, { params });
+  getGrades(): Observable<Grade[]> {
+    return this.http.get<Grade[]>(`${this.baseUrl}/academics/grades/`, { headers: this.getHeaders() });
+  }
+
+  getStudentGrades(studentId: number): Observable<Grade[]> {
+    return this.http.get<Grade[]>(`${this.baseUrl}/academics/grades/?student=${studentId}`, { headers: this.getHeaders() });
   }
 
   createGrade(grade: Partial<Grade>): Observable<Grade> {
-    return this.http.post<Grade>(`${this.API_URL}/academics/grades/`, grade);
+    return this.http.post<Grade>(`${this.baseUrl}/academics/grades/`, grade, { headers: this.getHeaders() });
   }
 
-  updateGrade(id: number, grade: Partial<Grade>): Observable<Grade> {
-    return this.http.patch<Grade>(`${this.API_URL}/academics/grades/${id}/`, grade);
+  // Financial
+  getInvoices(): Observable<Invoice[]> {
+    return this.http.get<Invoice[]>(`${this.baseUrl}/finance/invoices/`, { headers: this.getHeaders() });
   }
 
-  deleteGrade(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}/academics/grades/${id}/`);
+  getStudentInvoices(studentId: number): Observable<Invoice[]> {
+    return this.http.get<Invoice[]>(`${this.baseUrl}/finance/invoices/?student=${studentId}`, { headers: this.getHeaders() });
   }
 
-  calculateGrades(data: { student_id: number; trimester_id: number }): Observable<any> {
-    return this.http.post(`${this.API_URL}/academics/grades/calculate/`, data);
-  }
-
-  // Attendance
-  getAttendance(params?: any): Observable<{ results: Attendance[]; count: number }> {
-    return this.http.get<{ results: Attendance[]; count: number }>(`${this.API_URL}/academics/attendance/`, { params });
-  }
-
-  createAttendance(attendance: Partial<Attendance>): Observable<Attendance> {
-    return this.http.post<Attendance>(`${this.API_URL}/academics/attendance/`, attendance);
-  }
-
-  updateAttendance(id: number, attendance: Partial<Attendance>): Observable<Attendance> {
-    return this.http.patch<Attendance>(`${this.API_URL}/academics/attendance/${id}/`, attendance);
-  }
-
-  // Bulletins
-  getBulletins(params?: any): Observable<{ results: Bulletin[]; count: number }> {
-    return this.http.get<{ results: Bulletin[]; count: number }>(`${this.API_URL}/documents/bulletins/`, { params });
-  }
-
-  downloadBulletin(bulletinId: number, language: string = 'fr'): Observable<Blob> {
-    return this.http.get(`${this.API_URL}/documents/bulletin/${bulletinId}/download/?language=${language}`, {
-      responseType: 'blob'
-    });
-  }
-
-  // Invoices
-  getInvoices(params?: any): Observable<{ results: Invoice[]; count: number }> {
-    return this.http.get<{ results: Invoice[]; count: number }>(`${this.API_URL}/finance/invoices/`, { params });
-  }
-
-  createInvoice(invoice: Partial<Invoice>): Observable<Invoice> {
-    return this.http.post<Invoice>(`${this.API_URL}/finance/invoices/`, invoice);
-  }
-
-  updateInvoice(id: number, invoice: Partial<Invoice>): Observable<Invoice> {
-    return this.http.patch<Invoice>(`${this.API_URL}/finance/invoices/${id}/`, invoice);
-  }
-
-  // Payments
-  getPayments(params?: any): Observable<{ results: Payment[]; count: number }> {
-    return this.http.get<{ results: Payment[]; count: number }>(`${this.API_URL}/finance/payments/`, { params });
+  getPayments(): Observable<Payment[]> {
+    return this.http.get<Payment[]>(`${this.baseUrl}/finance/payments/`, { headers: this.getHeaders() });
   }
 
   createPayment(payment: Partial<Payment>): Observable<Payment> {
-    return this.http.post<Payment>(`${this.API_URL}/finance/payments/`, payment);
+    return this.http.post<Payment>(`${this.baseUrl}/finance/payments/`, payment, { headers: this.getHeaders() });
   }
 
-  // Documents
-  generatePresenceAttestation(data: { student_id: number; language: string }): Observable<Blob> {
-    return this.http.post(`${this.API_URL}/documents/attestation-presence/`, data, {
-      responseType: 'blob'
-    });
+  // Academic
+  getLevels(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/academics/levels/`, { headers: this.getHeaders() });
   }
 
-  generateInscriptionAttestation(data: { student_id: number; language: string }): Observable<Blob> {
-    return this.http.post(`${this.API_URL}/documents/attestation-inscription/`, data, {
-      responseType: 'blob'
-    });
+  getClasses(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/academics/classes/`, { headers: this.getHeaders() });
   }
 
-  // Profile
-  getProfile(): Observable<any> {
-    return this.http.get(`${this.API_URL}/accounts/profile/`);
+  getSubjects(): Observable<Subject[]> {
+    return this.http.get<Subject[]>(`${this.baseUrl}/academics/subjects/`, { headers: this.getHeaders() });
   }
 
-  updateProfile(profile: any): Observable<any> {
-    return this.http.patch(`${this.API_URL}/accounts/profile/`, profile);
+  getExamTypes(): Observable<ExamType[]> {
+    return this.http.get<ExamType[]>(`${this.baseUrl}/academics/exam-types/`, { headers: this.getHeaders() });
+  }
+
+  getAttendance(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/academics/attendance/`, { headers: this.getHeaders() });
   }
 }

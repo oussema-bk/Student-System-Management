@@ -1,0 +1,121 @@
+<app-navigation>
+  <div class="admin-dashboard">
+    <div class="dashboard-header">
+      <div class="header-content">
+        <div class="user-info">
+          <mat-icon class="user-icon">admin_panel_settings</mat-icon>
+          <div class="user-details">
+            <h1>{{ currentUser?.first_name }} {{ currentUser?.last_name }}</h1>
+            <p class="role-badge">Administrateur</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Chargement des données...</p>
+    </div>
+
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">group</mat-icon>
+              <div class="stat-info">
+                <h3>250</h3>
+                <p>Utilisateurs</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">school</mat-icon>
+              <div class="stat-info">
+                <h3>15</h3>
+                <p>Classes</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">book</mat-icon>
+              <div class="stat-info">
+                <h3>25</h3>
+                <p>Matières</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">assessment</mat-icon>
+              <div class="stat-info">
+                <h3>95%</h3>
+                <p>Taux de réussite</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-tab-group class="dashboard-tabs">
+        <mat-tab label="Gestion des Utilisateurs">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Administration des Utilisateurs</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>group</mat-icon>
+                  <p>Interface de gestion des utilisateurs</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Configuration Académique">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Configuration du Système</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>settings</mat-icon>
+                  <p>Configuration des classes, matières et niveaux</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Rapports">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Rapports et Statistiques</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>assessment</mat-icon>
+                  <p>Rapports académiques et financiers</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</app-navigation>

@@ -1,0 +1,261 @@
+.teacher-dashboard {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        .user-icon {
+          font-size: 3rem;
+          width: 3rem;
+          height: 3rem;
+        }
+
+        .user-details {
+          h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 500;
+          }
+
+          .role-badge {
+            margin: 0.25rem 0 0 0;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 0.875rem;
+            display: inline-block;
+          }
+
+          .teacher-id {
+            margin: 0.25rem 0 0 0;
+            font-size: 0.875rem;
+            opacity: 0.9;
+          }
+        }
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+
+    mat-spinner {
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+  }
+
+  .dashboard-content {
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+
+      .stat-card {
+        mat-card-content {
+        }
+
+        .stat-content {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+
+          .stat-icon {
+            font-size: 2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            color: #667eea;
+          }
+
+          .stat-info {
+            h3 {
+              margin: 0;
+              font-size: 2rem;
+              font-weight: 600;
+              color: #333;
+            }
+
+            p {
+              margin: 0.25rem 0 0 0;
+              color: #666;
+              font-size: 0.875rem;
+            }
+          }
+        }
+      }
+    }
+
+    .dashboard-tabs {
+      mat-tab-group {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .tab-content {
+        padding: 1.5rem;
+
+        .table-container {
+          overflow-x: auto;
+          margin-top: 1rem;
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+
+            th, td {
+              padding: 0.75rem;
+              text-align: left;
+              border-bottom: 1px solid #e0e0e0;
+            }
+
+            th {
+              background-color: #f5f5f5;
+              font-weight: 600;
+              color: #333;
+            }
+
+            tr:hover {
+              background-color: #f9f9f9;
+            }
+          }
+        }
+
+        .no-data {
+          text-align: center;
+          padding: 3rem;
+          color: #666;
+
+          mat-icon {
+            font-size: 3rem;
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 1rem;
+            color: #ccc;
+          }
+
+          p {
+            font-size: 1.1rem;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .form-section {
+    margin-top: 2rem;
+
+    mat-card {
+      mat-card-header {
+        mat-card-title {
+          color: #333;
+          font-weight: 600;
+        }
+      }
+
+      mat-card-content {
+        .form-row {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 1rem;
+          flex-wrap: wrap;
+
+          mat-form-field {
+            flex: 1;
+            min-width: 200px;
+          }
+        }
+
+        .form-actions {
+          display: flex;
+          gap: 1rem;
+          justify-content: flex-end;
+          margin-top: 1rem;
+        }
+      }
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+
+    .dashboard-header {
+      padding: 1rem;
+
+      .header-content {
+        .user-info {
+          .user-icon {
+            font-size: 2rem;
+            width: 2rem;
+            height: 2rem;
+          }
+
+          .user-details h1 {
+            font-size: 1.4rem;
+          }
+        }
+      }
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dashboard-tabs .tab-content {
+      padding: 1rem;
+
+      .table-container {
+        font-size: 0.875rem;
+      }
+    }
+
+    .form-section mat-card mat-card-content {
+      .form-row {
+        flex-direction: column;
+
+        mat-form-field {
+          min-width: 100%;
+        }
+      }
+
+      .form-actions {
+        flex-direction: column;
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

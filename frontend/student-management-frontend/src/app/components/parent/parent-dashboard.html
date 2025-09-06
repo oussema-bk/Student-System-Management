@@ -1,0 +1,121 @@
+<app-navigation>
+  <div class="parent-dashboard">
+    <div class="dashboard-header">
+      <div class="header-content">
+        <div class="user-info">
+          <mat-icon class="user-icon">family_restroom</mat-icon>
+          <div class="user-details">
+            <h1>{{ currentUser?.first_name }} {{ currentUser?.last_name }}</h1>
+            <p class="role-badge">Parent</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Chargement des données...</p>
+    </div>
+
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">child_care</mat-icon>
+              <div class="stat-info">
+                <h3>2</h3>
+                <p>Enfants</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">school</mat-icon>
+              <div class="stat-info">
+                <h3>15</h3>
+                <p>Notes moyennes</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">receipt</mat-icon>
+              <div class="stat-info">
+                <h3>3</h3>
+                <p>Factures en attente</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">payment</mat-icon>
+              <div class="stat-info">
+                <h3>1,200</h3>
+                <p>TND payés</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-tab-group class="dashboard-tabs">
+        <mat-tab label="Mes Enfants">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Informations des Enfants</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>child_care</mat-icon>
+                  <p>Sélectionnez un enfant pour voir ses informations</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Progrès Académique">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Suivi des Progrès</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>trending_up</mat-icon>
+                  <p>Aucun progrès disponible</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Paiements">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Historique des Paiements</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>payment</mat-icon>
+                  <p>Aucun paiement disponible</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</app-navigation>
