@@ -1,0 +1,57 @@
+<mat-toolbar color="primary" class="navigation-toolbar">
+  <button mat-icon-button (click)="toggleSidebar()" class="menu-button">
+    <mat-icon>menu</mat-icon>
+  </button>
+  
+  <span class="app-title">Système de Gestion Scolaire</span>
+  
+  <span class="spacer"></span>
+  
+  <div class="user-info" *ngIf="currentUser">
+    <span class="user-name">{{ currentUser.first_name }} {{ currentUser.last_name }}</span>
+    <span class="user-role">{{ getRoleDisplayName(currentUser.role) }}</span>
+  </div>
+  
+  <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-menu-button">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Déconnexion</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav [(opened)]="isSidebarOpen" mode="side" class="sidenav">
+    <mat-nav-list>
+      <div class="nav-header">
+        <mat-icon class="nav-icon">school</mat-icon>
+        <h3>Menu Principal</h3>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <ng-container *ngFor="let item of getFilteredMenuItems()">
+        <a mat-list-item (click)="navigateTo(item.route)" class="nav-item">
+          <mat-icon matListIcon>{{ item.icon }}</mat-icon>
+          <span matLine>{{ item.label }}</span>
+          <mat-icon matSuffix *ngIf="item.badge">notifications</mat-icon>
+        </a>
+      </ng-container>
+      
+      <mat-divider></mat-divider>
+      
+      <a mat-list-item (click)="logout()" class="logout-item">
+        <mat-icon matListIcon>logout</mat-icon>
+        <span matLine>Déconnexion</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  
+  <mat-sidenav-content class="main-content">
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

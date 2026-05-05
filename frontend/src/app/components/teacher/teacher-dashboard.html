@@ -1,0 +1,121 @@
+<app-navigation>
+  <div class="teacher-dashboard">
+    <div class="dashboard-header">
+      <div class="header-content">
+        <div class="user-info">
+          <mat-icon class="user-icon">person</mat-icon>
+          <div class="user-details">
+            <h1>{{ currentUser?.first_name }} {{ currentUser?.last_name }}</h1>
+            <p class="role-badge">Enseignant</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Chargement des données...</p>
+    </div>
+
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">group</mat-icon>
+              <div class="stat-info">
+                <h3>{{ students.length }}</h3>
+                <p>Étudiants</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">school</mat-icon>
+              <div class="stat-info">
+                <h3>{{ subjects.length }}</h3>
+                <p>Matières</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">assignment</mat-icon>
+              <div class="stat-info">
+                <h3>{{ grades.length }}</h3>
+                <p>Notes saisies</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">quiz</mat-icon>
+              <div class="stat-info">
+                <h3>{{ examTypes.length }}</h3>
+                <p>Types d'examens</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-tab-group class="dashboard-tabs">
+        <mat-tab label="Étudiants">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Mes Étudiants</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>group</mat-icon>
+                  <p>Aucun étudiant assigné</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Saisie des Notes">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Saisir une Note</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>assignment</mat-icon>
+                  <p>Formulaire de saisie des notes</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Notes Saisies">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Notes Saisies</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>assignment</mat-icon>
+                  <p>Aucune note saisie</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</app-navigation>

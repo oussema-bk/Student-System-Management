@@ -62,7 +62,7 @@ A comprehensive Student Management System built with Django (backend) and Angula
 ## 📁 Project Structure
 
 ```
-Arwa/
+student_management_system/
 ├── backend/                 # Django backend
 │   ├── student_management/  # Main Django project
 │   ├── apps/               # Django apps
@@ -97,7 +97,7 @@ Arwa/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd Arwa
+   cd student_management_system
    ```
 
 2. **Run the setup script**

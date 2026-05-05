@@ -9,6 +9,10 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Docker Compose container prefix (matches project dir name unless COMPOSE_PROJECT_NAME is set)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+COMPOSE_PROJECT="${COMPOSE_PROJECT_NAME:-$(basename "$SCRIPT_DIR")}"
+
 # Test function
 test_endpoint() {
     local name="$1"
@@ -56,35 +60,35 @@ test_endpoint "Frontend Direct" "http://localhost:4200/" "GET" "" "302"
 # Test Docker Services
 echo -e "\n${YELLOW}4. Testing Docker Services${NC}"
 echo -n "Backend container... "
-if docker ps | grep -q "arwa-backend-1"; then
+if docker ps | grep -q "${COMPOSE_PROJECT}-backend-1"; then
     echo -e "${GREEN}✓ RUNNING${NC}"
 else
     echo -e "${RED}✗ NOT RUNNING${NC}"
 fi
 
 echo -n "Frontend container... "
-if docker ps | grep -q "arwa-frontend-1"; then
+if docker ps | grep -q "${COMPOSE_PROJECT}-frontend-1"; then
     echo -e "${GREEN}✓ RUNNING${NC}"
 else
     echo -e "${RED}✗ NOT RUNNING${NC}"
 fi
 
 echo -n "Database container... "
-if docker ps | grep -q "arwa-db-1"; then
+if docker ps | grep -q "${COMPOSE_PROJECT}-db-1"; then
     echo -e "${GREEN}✓ RUNNING${NC}"
 else
     echo -e "${RED}✗ NOT RUNNING${NC}"
 fi
 
 echo -n "Redis container... "
-if docker ps | grep -q "arwa-redis-1"; then
+if docker ps | grep -q "${COMPOSE_PROJECT}-redis-1"; then
     echo -e "${GREEN}✓ RUNNING${NC}"
 else
     echo -e "${RED}✗ NOT RUNNING${NC}"
 fi
 
 echo -n "Nginx container... "
-if docker ps | grep -q "arwa-nginx-1"; then
+if docker ps | grep -q "${COMPOSE_PROJECT}-nginx-1"; then
     echo -e "${GREEN}✓ RUNNING${NC}"
 else
     echo -e "${RED}✗ NOT RUNNING${NC}"
@@ -93,7 +97,7 @@ fi
 # Test Database
 echo -e "\n${YELLOW}5. Testing Database${NC}"
 echo -n "Database connection... "
-if docker exec arwa-db-1 pg_isready -U postgres > /dev/null 2>&1; then
+if docker exec "${COMPOSE_PROJECT}-db-1" pg_isready -U postgres > /dev/null 2>&1; then
     echo -e "${GREEN}✓ CONNECTED${NC}"
 else
     echo -e "${RED}✗ NOT CONNECTED${NC}"

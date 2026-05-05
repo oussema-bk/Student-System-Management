@@ -1,0 +1,121 @@
+<app-navigation>
+  <div class="manager-dashboard">
+    <div class="dashboard-header">
+      <div class="header-content">
+        <div class="user-info">
+          <mat-icon class="user-icon">account_balance</mat-icon>
+          <div class="user-details">
+            <h1>{{ currentUser?.first_name }} {{ currentUser?.last_name }}</h1>
+            <p class="role-badge">Gestionnaire</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Chargement des données...</p>
+    </div>
+
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">attach_money</mat-icon>
+              <div class="stat-info">
+                <h3>25,000</h3>
+                <p>TND Revenus</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">pending</mat-icon>
+              <div class="stat-info">
+                <h3>5,000</h3>
+                <p>TND En attente</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">warning</mat-icon>
+              <div class="stat-info">
+                <h3>2,500</h3>
+                <p>TND En retard</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">receipt</mat-icon>
+              <div class="stat-info">
+                <h3>150</h3>
+                <p>Factures</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-tab-group class="dashboard-tabs">
+        <mat-tab label="Gestion Financière">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Tableau de Bord Financier</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>account_balance</mat-icon>
+                  <p>Données financières en cours de chargement</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Factures">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Gestion des Factures</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>receipt</mat-icon>
+                  <p>Aucune facture disponible</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Paiements">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Suivi des Paiements</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="no-data">
+                  <mat-icon>payment</mat-icon>
+                  <p>Aucun paiement disponible</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</app-navigation>

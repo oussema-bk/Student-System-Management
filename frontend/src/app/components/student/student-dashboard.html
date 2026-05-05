@@ -1,0 +1,222 @@
+<app-navigation>
+  <div class="student-dashboard">
+    <div class="dashboard-header">
+      <div class="header-content">
+        <div class="user-info">
+          <mat-icon class="user-icon">school</mat-icon>
+          <div class="user-details">
+            <h1>{{ currentUser?.first_name }} {{ currentUser?.last_name }}</h1>
+            <p class="role-badge">Étudiant</p>
+            <p class="student-id" *ngIf="student">ID: {{ student.student_id }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Chargement des données...</p>
+    </div>
+
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">school</mat-icon>
+              <div class="stat-info">
+                <h3>{{ grades.length }}</h3>
+                <p>Notes</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">receipt</mat-icon>
+              <div class="stat-info">
+                <h3>{{ invoices.length }}</h3>
+                <p>Factures</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">payment</mat-icon>
+              <div class="stat-info">
+                <h3>{{ payments.length }}</h3>
+                <p>Paiements</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">trending_up</mat-icon>
+              <div class="stat-info">
+                <h3>{{ getAverageGrade() }}</h3>
+                <p>Moyenne</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-tab-group class="dashboard-tabs">
+        <mat-tab label="Notes">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Mes Notes</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="table-container" *ngIf="grades.length > 0">
+                  <table mat-table [dataSource]="grades" class="grades-table">
+                    <ng-container matColumnDef="subject">
+                      <th mat-header-cell *matHeaderCellDef>Matière</th>
+                      <td mat-cell *matCellDef="let grade">{{ grade.subject.name }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="exam_type">
+                      <th mat-header-cell *matHeaderCellDef>Type d'examen</th>
+                      <td mat-cell *matCellDef="let grade">{{ grade.exam_type.name }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="grade">
+                      <th mat-header-cell *matHeaderCellDef>Note</th>
+                      <td mat-cell *matCellDef="let grade">
+                        <mat-chip [color]="getGradeColor(grade.grade)" selected>
+                          {{ grade.grade }}/20
+                        </mat-chip>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="trimester">
+                      <th mat-header-cell *matHeaderCellDef>Trimestre</th>
+                      <td mat-cell *matCellDef="let grade">{{ grade.trimester }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="date">
+                      <th mat-header-cell *matHeaderCellDef>Date</th>
+                      <td mat-cell *matCellDef="let grade">{{ grade.created_at | date:'dd/MM/yyyy' }}</td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsGrades"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsGrades;"></tr>
+                  </table>
+                </div>
+                <div *ngIf="grades.length === 0" class="no-data">
+                  <mat-icon>school</mat-icon>
+                  <p>Aucune note disponible</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Factures">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Mes Factures</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="table-container" *ngIf="invoices.length > 0">
+                  <table mat-table [dataSource]="invoices" class="invoices-table">
+                    <ng-container matColumnDef="invoice_number">
+                      <th mat-header-cell *matHeaderCellDef>Numéro</th>
+                      <td mat-cell *matCellDef="let invoice">{{ invoice.invoice_number }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="amount">
+                      <th mat-header-cell *matHeaderCellDef>Montant</th>
+                      <td mat-cell *matCellDef="let invoice">{{ invoice.amount }} TND</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="due_date">
+                      <th mat-header-cell *matHeaderCellDef>Date d'échéance</th>
+                      <td mat-cell *matCellDef="let invoice">{{ invoice.due_date | date:'dd/MM/yyyy' }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                      <th mat-header-cell *matHeaderCellDef>Statut</th>
+                      <td mat-cell *matCellDef="let invoice">
+                        <mat-chip [color]="getStatusColor(invoice.status)" selected>
+                          {{ invoice.status }}
+                        </mat-chip>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsInvoices"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsInvoices;"></tr>
+                  </table>
+                </div>
+                <div *ngIf="invoices.length === 0" class="no-data">
+                  <mat-icon>receipt</mat-icon>
+                  <p>Aucune facture disponible</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Paiements">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Mes Paiements</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="table-container" *ngIf="payments.length > 0">
+                  <table mat-table [dataSource]="payments" class="payments-table">
+                    <ng-container matColumnDef="invoice">
+                      <th mat-header-cell *matHeaderCellDef>Facture</th>
+                      <td mat-cell *matCellDef="let payment">{{ payment.invoice.invoice_number }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="amount">
+                      <th mat-header-cell *matHeaderCellDef>Montant</th>
+                      <td mat-cell *matCellDef="let payment">{{ payment.amount }} TND</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="method">
+                      <th mat-header-cell *matHeaderCellDef>Méthode</th>
+                      <td mat-cell *matCellDef="let payment">{{ payment.payment_method }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="date">
+                      <th mat-header-cell *matHeaderCellDef>Date</th>
+                      <td mat-cell *matCellDef="let payment">{{ payment.payment_date | date:'dd/MM/yyyy' }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                      <th mat-header-cell *matHeaderCellDef>Statut</th>
+                      <td mat-cell *matCellDef="let payment">
+                        <mat-chip [color]="getStatusColor(payment.status)" selected>
+                          {{ payment.status }}
+                        </mat-chip>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsPayments"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsPayments;"></tr>
+                  </table>
+                </div>
+                <div *ngIf="payments.length === 0" class="no-data">
+                  <mat-icon>payment</mat-icon>
+                  <p>Aucun paiement disponible</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</app-navigation>
